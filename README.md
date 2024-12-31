@@ -6,10 +6,8 @@
 - Install the required packages (pip or conda)
     - `pip install -r requirements.txt`
 
-- Download data xlsx
-    -  https://github.com/(Anonymous)/1
-    -  https://github.com/rahadiana/twitter_trend_world
-- Download data csv
+- Download data xlsx csv
+    - https://github.com/rahadiana/twitter_trend_world
     - https://github.com/wangxiaoshi1103/trending_weibo_data
 - Built-in data
     -  trending_weibo_new/data_csv/weibo
@@ -18,7 +16,7 @@
 - only dependencies 
     - Before training the model,please modify 
         - mv data_csv data
-        - cd data/chinese-roberta-wwm-ext  ## download bert or use you own pretrained text representation
+        - mkdir data/chinese-roberta-wwm-ext  ## download bert or use you own pretrained text representation
 
 - Train on weibo/twitter dataset    
     - `python ./main.py`
