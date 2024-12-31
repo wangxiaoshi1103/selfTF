@@ -1,0 +1,16 @@
+# install tensorboard
+--pip install tensorboard
+
+# code
+-- from torch.utils.tensorboard import SummaryWriter
+-- self.writer = SummaryWriter('runs/'+model_name)
+-- self.writer.add_scalar('test_loss', mean_test_loss, self.epoch)
+
+# gpu start tensorbaord 
+tensorboard --logdir=logs --port=6006
+tensorboard --logdir=/path/to/your/logs --bind_all
+
+# from localhost access tensorboard
+ssh -L 16006:localhost:6006 user@ip_sever
+http://localhost:6006 
+
