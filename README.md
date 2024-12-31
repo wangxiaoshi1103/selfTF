@@ -9,23 +9,27 @@
 - Download data xlsx
     -  https://github.com/(Anonymous)/1
     -  https://github.com/rahadiana/twitter_trend_world
+- Download data csv
+    - https://github.com/wangxiaoshi1103/trending_weibo_data
 - Built-in data
     -  trending_weibo_new/data_csv/weibo
     -  trending_weibo_new/data_csv/twitter
 
-- dependencies
-    - please download bert/bge model or pretrain your own text representation model
-    - Before training the model, please modify the text representation model path which used by BertTokenizer like
-        - tokenizer = BertTokenizer.from_pretrained('./data/chinese-roberta-wwm-ext')
+- only dependencies 
+    - Before training the model,please modify 
+        - mv data_csv data
+        - cd data/chinese-roberta-wwm-ext  ## download bert or use you own pretrained text representation
 
 - Train on weibo/twitter dataset    
     - `python ./main.py`
+    - #When you execute main.py for the second time, please change the model name, or clear the existing model in the logs.
 - Inferance on weibo/twitter dataset
     - `python ./main_infer.py`
-    
+    - #When you execute main_infer.py, please modify the model name to be consistent with the one in main.py. 
+
     
 - Semantic Fusion fusion transformer
     - `model: selftft_transformer`
 
 - Use TensorBoard to visualize the training process
-    - use_tensorboard.txt
+    - refer to use_tensorboard.txt
