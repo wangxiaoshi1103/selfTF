@@ -1,0 +1,56 @@
+#Hyper Params
+batch_size: 64
+device: cpu
+lr: 0.001
+num_epochs: 1
+n_workers: 0
+model: tf_transformer  #模型选择
+loader: base
+
+# Dataset
+ds_name: experiment 
+train_samples: 450
+test_samples: 50
+val_samples: 50
+input_size: 5   #模型输入列数  0 target  123 known  4 static
+output_size: 1
+total_time_steps: 192
+num_encoder_steps: 168
+static_input_loc: #staitic   可以多个
+- 4
+input_obs_loc:  #target power usage  inputs 192*5 中顺序
+- 0
+known_categorical_inputs:  # 在category的列中，第几列是未来已知的
+- 0
+known_regular_inputs:   # 已知变量  regular必须在category前面
+- 1
+- 2
+- 3
+category_counts:
+- 369
+
+# Model Temporal Fusion Transformer
+quantiles:
+- 0.1
+- 0.5
+- 0.9
+batch_first: true
+early_stopping_patience: 5
+hidden_layer_size: 160
+stack_size: 1
+dropout_rate: 0.1
+max_gradient_norm: 0.01
+num_heads: 4
+
+# Model Transformer
+d_model: 64
+q: 16
+v: 16
+h: 4
+N: 2
+attention_size: 0
+dropout: 0.1
+pe: original
+chunk_mode: None
+d_input: 5
+d_output: 3

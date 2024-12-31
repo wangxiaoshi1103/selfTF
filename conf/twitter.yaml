@@ -1,0 +1,84 @@
+#Hyper Params
+batch_size: 64
+device: cuda
+lr: 0.001
+num_epochs: 100
+n_workers: 0
+model: selftf_transformer  #模型选择
+loader: base
+is_bert: 1
+is_static: 1
+tower: add
+
+# Dataset
+ds_name: twitter 
+#train_samples: 114326
+#train_samples: 20000
+train_samples: 3500 
+#test_samples: 1937
+#test_samples: 3000
+test_samples: 400
+#val_samples: 1937
+#val_samples: 3000
+val_samples: 400
+input_size: 16
+output_size: 1
+total_time_steps: 30
+num_encoder_steps: 25
+bert_categoricals:
+- topicName
+- query 
+
+static_input_loc:
+- 14
+- 15
+input_obs_loc:
+- 0
+known_categorical_inputs:
+- 0
+- 1
+known_regular_inputs:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+- 10
+- 11
+- 12
+- 13
+category_counts:
+- 1000
+- 1000
+
+
+# Model Temporal Fusion Transformer
+quantiles:
+- 0.1
+- 0.5
+- 0.9
+batch_first: true
+early_stopping_patience: 5
+hidden_layer_size: 160
+stack_size: 1
+dropout_rate: 0.1
+max_gradient_norm: 0.01
+num_heads: 4
+bert_output_size: 64
+
+# Model Transformer
+d_model: 64
+q: 16
+v: 16
+h: 4
+N: 2
+attention_size: 0
+dropout: 0.1
+pe: original
+chunk_mode: None
+d_input: 5
+d_output: 3
