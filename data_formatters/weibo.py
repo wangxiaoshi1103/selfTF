@@ -197,6 +197,8 @@ class WeiboFormatter(GenericDataFormatter):
       for t in df['topicType'].unique():
           df_type = df[df['topicType'] == t]
           grouped = list(df_type.groupby('id'))
+          if len(grouped) < 10:
+              continue
           train_groups, temp_groups = train_test_split(grouped, test_size=0.3, random_state=42)
           valid_groups, test_groups = train_test_split(temp_groups, test_size=1/3, random_state=42)
           train = pd.concat([group for _, group in train_groups])
