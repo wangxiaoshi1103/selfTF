@@ -6,11 +6,10 @@
 - Install the required packages (pip or conda)
     - `pip install -r requirements.txt`
 
-- Download data xlsx csv
-    - https://github.com/rahadiana/twitter_trend_world
-    - https://github.com/wangxiaoshi1103/trending_weibo_data
+- Download data csv
+    - https://github.com/wangxiaoshi1103/trending_weibo_data  
 - Built-in data
-    -  trending_weibo_new/data_csv/weibo
+    -  trending_weibo_new/data_csv/weibo   (built in data less than 25M, if you want more data, please download from git above)
     -  trending_weibo_new/data_csv/twitter
 
 - only dependencies 
@@ -18,10 +17,14 @@
         - mv data_csv data
         - mkdir data/chinese-roberta-wwm-ext  ## download bert or use you own pretrained text representation
 
+- config semantic representation、features、model parameters、data set etc
+    - conf/weibo.yaml
+    - conf/twitter.yaml
+
 - Train on weibo/twitter dataset    
     - `python ./main.py`
     - #When you execute main.py for the second time, please change the model name, or clear the existing model in the logs.
-- Inferance on weibo/twitter dataset
+- Inference on weibo/twitter dataset
     - `python ./main_infer.py`
     - #When you execute main_infer.py, please modify the model name to be consistent with the one in main.py. 
 
