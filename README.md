@@ -18,7 +18,7 @@
         - mkdir data/chinese-roberta-wwm-ext  ## download bert or use you own pretrained text representation
 
 - config semantic representation、features、model parameters、data set etc
-    - conf/weibo.yaml
+    - conf/weibo.yaml    ## The present configuration can only execute the basic setup. If you wish to replicate the paper's results, please refer to conf/weibo_1234.yaml
     - conf/twitter.yaml
 
 - Train on weibo/twitter dataset    
