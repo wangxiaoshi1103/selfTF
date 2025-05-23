@@ -91,7 +91,9 @@ class Trainer(object):
         #model_name="weibo_1234_4w_adam_transformer_rmse_48"
         #model_name="weibo_134_4w_grad_bge_small_rmse_35"
         #model_name="weibo_124_4w_adam_cate_rmse_seed2468_57"
-        model_name="weibo_model_1"
+        #model_name="weibo_model_1"
+        #model_name="weibo_1234_4w_adam_selftf_text_rmse_61"
+        model_name="weibo_1234_4wfix_adam_selftf_text_vocab3m_notrain_rmse_67"
         self.log_path = Path('./log') / model_name 
         print(f'tensorboard --logdir={cnf.project_log_path.abspath()}\n')
         self.sw = SummaryWriter(self.log_path)
@@ -114,7 +116,7 @@ class Trainer(object):
         #self.writer = SummaryWriter('runs/1_2_3_1mon_1w_add_fix')
         #self.writer = SummaryWriter('runs/1234_4w_grad_cate_msefix_23')
         #self.writer = SummaryWriter('runs/1234_4w_grad_bge_base_msefix_25')
-        self.writer = SummaryWriter('runs3/'+model_name)
+        self.writer = SummaryWriter('runs4/'+model_name)
 
         print("Finished preparing datasets.")
 

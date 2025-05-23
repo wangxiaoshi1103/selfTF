@@ -69,29 +69,29 @@ class WeiboFormatter(GenericDataFormatter):
       ('hotPos', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 1
       ('origin', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 1
       ('interact', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 1
-      #('active_time', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3：加工后特征
-      #('climbing_time', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('top_hotPos', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('max_span_up_hotPos', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('max_span_down_hotPos', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('hotPos_flucation_avg_span', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('max_span_up_popular', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('max_span_down_popular', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('reading_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('popular_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('discussion_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('origin_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('interact_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('avg_reading_growth', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
-      #('avg_interact_growth', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('active_time', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3：加工后特征
+      ('climbing_time', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('top_hotPos', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('max_span_up_hotPos', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('max_span_down_hotPos', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('hotPos_flucation_avg_span', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('max_span_up_popular', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('max_span_down_popular', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('reading_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('popular_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('discussion_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('origin_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('interact_avg', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('avg_reading_growth', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
+      ('avg_interact_growth', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),  # 3
       ##('timeOnBoard', DataTypes.REAL_VALUED, InputTypes.STATIC_INPUT),  # 3
       ## ('time_first', DataTypes.REAL_VALUED, InputTypes.STATIC_INPUT),  # 3 首次上50榜的时间
-      ('topicName', DataTypes.CATEGORICAL, InputTypes.STATIC_INPUT),  # 2
-      ('topicType', DataTypes.CATEGORICAL, InputTypes.STATIC_INPUT),  # 2
-      ('introductId', DataTypes.CATEGORICAL, InputTypes.STATIC_INPUT),  # 2
-      #('topicName', DataTypes.TEXT, InputTypes.STATIC_INPUT),  # 2
-      #('topicType', DataTypes.TEXT, InputTypes.STATIC_INPUT),  # 2
-      #('introductId', DataTypes.TEXT, InputTypes.STATIC_INPUT),  # 2
+      #('topicName', DataTypes.CATEGORICAL, InputTypes.STATIC_INPUT),  # 2
+      #('topicType', DataTypes.CATEGORICAL, InputTypes.STATIC_INPUT),  # 2
+      #('introductId', DataTypes.CATEGORICAL, InputTypes.STATIC_INPUT),  # 2
+      ('topicName', DataTypes.TEXT, InputTypes.STATIC_INPUT),  # 2
+      ('topicType', DataTypes.TEXT, InputTypes.STATIC_INPUT),  # 2
+      ('introductId', DataTypes.TEXT, InputTypes.STATIC_INPUT),  # 2
   ]
 
   def __init__(self):
@@ -160,7 +160,7 @@ class WeiboFormatter(GenericDataFormatter):
     return (self.transform_inputs(data) for data in [train, valid, test])
       
 
-  def split_data(self, df, valid_boundary=1315, test_boundary=1339):
+  def split_data(self, df, df2, valid_boundary=1315, test_boundary=1339):
       df = self.day_of_week(df)
 
       # 计算mins from start
@@ -197,7 +197,7 @@ class WeiboFormatter(GenericDataFormatter):
       for t in df['topicType'].unique():
           df_type = df[df['topicType'] == t]
           grouped = list(df_type.groupby('id'))
-          if len(grouped) < 10:
+          if len(grouped)<10:
               continue
           train_groups, temp_groups = train_test_split(grouped, test_size=0.3, random_state=42)
           valid_groups, test_groups = train_test_split(temp_groups, test_size=1/3, random_state=42)
@@ -217,9 +217,9 @@ class WeiboFormatter(GenericDataFormatter):
       valid = pd.concat(valid_list)
       test = pd.concat(test_list)
 
-      self.set_scalers(df)
+      self.set_scalers(df, df2)
       if self._is_bert > 0:
-          self.set_bert_embeddings(df)
+          self.set_bert_embeddings(df2)
       return (self.transform_inputs(data) for data in [train, valid, test])
 
     # index = df['dayOfWeek']
@@ -233,7 +233,7 @@ class WeiboFormatter(GenericDataFormatter):
     # return (self.transform_inputs(data) for data in [train, valid, test])
 
 
-  def set_scalers(self, df):
+  def set_scalers(self, df, df2):
     """Calibrates scalers using the data supplied.
 
     Args:
@@ -291,10 +291,11 @@ class WeiboFormatter(GenericDataFormatter):
 
     categorical_scalers = {}
     num_classes = []
-    label_to_integer_mappings = {}  
+    label_to_integer_mappings = {}
+    #pdb.set_trace()
     for col in categorical_inputs:
       # Set all to str so that we don't have mixed integer/string columns
-      srs = df[col].apply(str)
+      srs = df2[col].apply(str)
       scaler = sklearn.preprocessing.LabelEncoder().fit(srs.values)
       categorical_scalers[col] = scaler
       num_classes.append(srs.nunique())

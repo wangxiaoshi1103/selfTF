@@ -32,19 +32,25 @@ class TSDataset(Dataset):
         # else:
         #     self.data = pd.read_csv(self.csv, index_col=0, na_filter=False)
         if(self.params['ds_name'] == 'weibo'):
-            self.data = pd.read_csv(self.csv, index_col=0, dtype=dtype_spec, na_filter=True, na_values=['', 'NA', 'None'])
+            #self.data = pd.read_csv(self.csv, index_col=0, dtype=dtype_spec, na_filter=True, na_values=['', 'NA', 'None'])
+            self.data = pd.read_csv(self.csv, dtype=dtype_spec, na_filter=True, na_values=['', 'NA', 'None'])
+            self.data_bert = pd.read_csv("./data/weibo/topic_vacab_3mon_filter.csv", na_filter = False)
+            self.data_bert = self.data_bert[["topicName", "topicType", "id", "introduct"]]
+            self.data_bert['introductId'] = self.data_bert['id']
         if (self.params['ds_name'] == 'twitter'):
             #self.data = pd.read_csv(self.csv, index_col=0, dtype=dtype_spec, na_filter=True, na_values=['', 'NA', 'None'])
             self.data = pd.read_csv(self.csv, index_col=0, na_filter=True, na_values=['', 'NA', 'None'])
         #pdb.set_trace()
 
-        self.train_set, self.valid_set, self.test_set = data_formatter.split_data(self.data)
+        self.train_set, self.valid_set, self.test_set = data_formatter.split_data(self.data, self.data_bert)
         self.params['column_definition'] = data_formatter.get_column_definition()
         #pdb.set_trace()
 
         self.category_to_vectors = None
         if self.params['is_bert'] > 0:
             self.category_to_vectors = data_formatter.get_bert_embeddings()
+
+        #pdb.set_trace()
 
         self.inputs = None
         self.outputs = None
@@ -268,11 +274,14 @@ class TSDatasetBert(Dataset):
         #     self.data = pd.read_csv(self.csv, index_col=0, na_filter=False)
         if(self.params['ds_name'] == 'weibo'):
             self.data = pd.read_csv(self.csv, index_col = 0, na_filter = False)
+            self.data_bert = pd.read_csv("data/weibo/5.17_half_3mon.csv", index_col = 0, na_filter = False)
+            self.data_bert = self.data_bert[["topicName", "topicType", "introductId"]]
         if (self.params['ds_name'] == 'twitter'):
             self.data = pd.read_csv(self.csv, index_col=0, na_filter=False)
+            #self.data_bert = pd.read_csv(self.csv, index_col = 0, na_filter = False)
         #pdb.set_trace()
 
-        self.train_set, self.valid_set, self.test_set = data_formatter.split_data(self.data)
+        self.train_set, self.valid_set, self.test_set = data_formatter.split_data(self.data, self.data_bert)
         self.params['column_definition'] = data_formatter.get_column_definition()
         #pdb.set_trace()
 

@@ -38,6 +38,7 @@ class TS(object):
 
         # init model
         model_choice = self.cnf.all_params["model"]
+        #pdb.set_trace()
         if model_choice == "transformer":
             # Baseline transformer
             self.model = Transformer(self.cnf.all_params)
@@ -63,6 +64,7 @@ class TS(object):
             dataset=dataset_test, batch_size=cnf.batch_size,
             num_workers=cnf.n_workers, shuffle=False, pin_memory=True,
         )
+        #pdb.set_trace()
 
         # init logging stuffs
         self.log_path = cnf.exp_log_path
@@ -130,7 +132,8 @@ class TS(object):
         #model_name='weibo_1234_2w_adam_bert_rmse_49'
         #model_name='weibo_1234_4w_adam_bert_rmse_seed2468_50'
         #model_name='weibo_14_4w_adam_cate_rmse_seed2468_52'
-        model_name='weibo_model_1'
+        #model_name='weibo_model_1'
+        model_name='weibo_1234_4wfix_adam_selftf_text_vocab3m_notrain_rmse_67'
         ck_path_root = f'./log/{model_name}'
         ck_path = Path(f'{ck_path_root}/{self.cnf.exp_name}_best.pth')
         #pdb.set_trace()
