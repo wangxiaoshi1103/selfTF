@@ -93,7 +93,7 @@ class Trainer(object):
         #model_name="weibo_124_4w_adam_cate_rmse_seed2468_57"
         #model_name="weibo_model_1"
         #model_name="weibo_1234_4w_adam_selftf_text_rmse_61"
-        model_name="weibo_1234_4wfix_adam_selftf_text_vocab3m_notrain_rmse_67"
+        model_name="weibo_1234_4wfix_adam_selftf_text_vocab3m_notrain_rmse_pic_title_75"
         self.log_path = Path('./log') / model_name 
         print(f'tensorboard --logdir={cnf.project_log_path.abspath()}\n')
         self.sw = SummaryWriter(self.log_path)

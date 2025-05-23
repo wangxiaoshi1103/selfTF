@@ -34,9 +34,10 @@ class TSDataset(Dataset):
         if(self.params['ds_name'] == 'weibo'):
             #self.data = pd.read_csv(self.csv, index_col=0, dtype=dtype_spec, na_filter=True, na_values=['', 'NA', 'None'])
             self.data = pd.read_csv(self.csv, dtype=dtype_spec, na_filter=True, na_values=['', 'NA', 'None'])
+            self.data['introductId'] = self.data['topicName'] 
             self.data_bert = pd.read_csv("./data/weibo/topic_vacab_3mon_filter.csv", na_filter = False)
             self.data_bert = self.data_bert[["topicName", "topicType", "id", "introduct"]]
-            self.data_bert['introductId'] = self.data_bert['id']
+            self.data_bert['introductId'] = self.data_bert['topicName']
         if (self.params['ds_name'] == 'twitter'):
             #self.data = pd.read_csv(self.csv, index_col=0, dtype=dtype_spec, na_filter=True, na_values=['', 'NA', 'None'])
             self.data = pd.read_csv(self.csv, index_col=0, na_filter=True, na_values=['', 'NA', 'None'])
@@ -274,8 +275,10 @@ class TSDatasetBert(Dataset):
         #     self.data = pd.read_csv(self.csv, index_col=0, na_filter=False)
         if(self.params['ds_name'] == 'weibo'):
             self.data = pd.read_csv(self.csv, index_col = 0, na_filter = False)
+            self.data['introductId'] = self.data['topicName'] 
             self.data_bert = pd.read_csv("data/weibo/5.17_half_3mon.csv", index_col = 0, na_filter = False)
             self.data_bert = self.data_bert[["topicName", "topicType", "introductId"]]
+            self.data_bert['introductId'] = self.data_bert['topicName']
         if (self.params['ds_name'] == 'twitter'):
             self.data = pd.read_csv(self.csv, index_col=0, na_filter=False)
             #self.data_bert = pd.read_csv(self.csv, index_col = 0, na_filter = False)

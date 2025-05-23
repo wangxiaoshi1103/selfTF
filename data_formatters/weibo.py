@@ -181,7 +181,9 @@ class WeiboFormatter(GenericDataFormatter):
       #text_to_code = {'G{:02d}'.format(i): i for i in range(len(df['introduct'].unique()))}
       #df['id'] = df['introduct'].astype('category').cat.codes.apply(lambda x:'G{:02d}'.format(x)) 
       #df['topicName'] = df['id']  
-      df['introductId'] = df['id']
+      #df['introductId'] = df['id']
+      df['introductId'] = df['topicName']
+      df2['introductId'] = df2['topicName']
 
       # 话题类型split
       split_types = df['topicType'].str.split(',', expand=True).stack().reset_index(level=1, drop=True)
@@ -337,7 +339,11 @@ class WeiboFormatter(GenericDataFormatter):
     #model = BertModel.from_pretrained('../BGE/bge-small-zh-v1.5')
     #linear = nn.Linear(512, self._hidden_layer_size)
 
-    for col in categorical_inputs:
+
+    #for col in categorical_inputs:
+    #for col in ['topicType']:
+    #for col in categorical_inputs:
+    for col in ['topicType']:
         col_to_vector = {}
         unique_values = set()
         for index, row in df.iterrows():
@@ -345,14 +351,14 @@ class WeiboFormatter(GenericDataFormatter):
             if text in unique_values:
                 continue
             unique_values.add(text)
-            if col == "introductId":
-                text = str(row["introduct"])
+            #if col == "introductId":
+            #    text = str(row["introduct"])
             encoded_input = tokenizer(text, return_tensors='pt')
             with torch.no_grad():
                 outputs = model(**encoded_input).last_hidden_state[:, 0, :]
             transformed_output = linear(outputs)
-            if col == "introductId":
-                text = str(row[col])
+            #if col == "introductId":
+            #    text = str(row[col])
             index = self._label_to_integer_mappings[col][text]
             col_to_vector[index] = transformed_output
             #col_to_vector[index] = outputs
@@ -363,7 +369,40 @@ class WeiboFormatter(GenericDataFormatter):
                                       
         #pdb.set_trace()
         self._category_to_vectors[col] = sorted_tensor
-      
+    #pdb.set_trace()
+    embeddings = torch.load("data/weibo/embeddings.pt")
+    text_to_image_embedding = {}
+    col_to_vector_image = {}
+    col_to_vector_text = {}
+    for item in embeddings:
+        image_emb_tensor = torch.from_numpy(item["image_embedding"]).float()
+        text_emb_tensor = torch.from_numpy(item["text_embedding"]).float()
+        with torch.no_grad():
+            reduced_embedding = linear(image_emb_tensor)
+            reduced_embedding_text = linear(text_emb_tensor)
+        text = item["text"]
+        text_to_image_embedding[text] = reduced_embedding.numpy()
+        index = self._label_to_integer_mappings['topicName'][text]
+        col_to_vector_image[index] = reduced_embedding.numpy()
+        col_to_vector_text[index] = reduced_embedding_text.numpy()
+    for idx in range(11722):
+        if idx not in col_to_vector_image:
+            col_to_vector_image[idx] = torch.zeros(self._hidden_layer_size).numpy()
+        if idx not in col_to_vector_text:
+            col_to_vector_text[idx] = torch.zeros(self._hidden_layer_size).numpy()
+    sorted_indices_image_keys = sorted(col_to_vector_image.keys())  
+    sorted_indices_text_keys = sorted(col_to_vector_text.keys())  
+    sorted_vectors_image = [col_to_vector_image[idx] for idx in sorted_indices_image_keys]
+    sorted_vectors_text = [col_to_vector_text[idx] for idx in sorted_indices_text_keys]
+    tensor_list_image = [torch.from_numpy(arr) for arr in sorted_vectors_image]
+    tensor_list_text = [torch.from_numpy(arr) for arr in sorted_vectors_text]
+    stacked_tensor_image = torch.stack(tensor_list_image)
+    stacked_tensor_text = torch.stack(tensor_list_text)
+    #sorted_tensor_image = torch.stack(sorted_vectors_image).squeeze(1) 
+    self._category_to_vectors["topicName"] = stacked_tensor_image 
+    self._category_to_vectors["introductId"] = stacked_tensor_text 
+    #pdb.set_trace()
+    #self._category_to_vectors["introductId"] = stacked_tensor_image 
 
   def transform_inputs(self, df):
     """Performs feature transformations.

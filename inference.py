@@ -133,7 +133,9 @@ class TS(object):
         #model_name='weibo_1234_4w_adam_bert_rmse_seed2468_50'
         #model_name='weibo_14_4w_adam_cate_rmse_seed2468_52'
         #model_name='weibo_model_1'
-        model_name='weibo_1234_4wfix_adam_selftf_text_vocab3m_notrain_rmse_67'
+        #model_name='weibo_1234_4wfix_adam_selftf_text_vocab3m_notrain_rmse_67'
+        #model_name='weibo_1234_4wfix_adam_selftf_text_vocab3m_notrain_rmse_piconly_72'
+        model_name='weibo_1234_4wfix_adam_selftf_text_vocab3m_notrain_rmse_pic_title_75'
         ck_path_root = f'./log/{model_name}'
         ck_path = Path(f'{ck_path_root}/{self.cnf.exp_name}_best.pth')
         #pdb.set_trace()
